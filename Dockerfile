@@ -1,11 +1,21 @@
-FROM ubuntu:24.04
+FROM centos:7
+ENV container docker
 
-RUN apt-get update \
-&& apt-get install -y init systemd
+RUN yum update -y
+
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 RUN adduser vscode
-RUN apt-get update -y
-RUN apt-get install -y  git sudo
+RUN yum -y install sudo git
 RUN echo 'vscode ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-
+VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/usr/sbin/init"]
