@@ -3,6 +3,13 @@ ENV container docker
 
 RUN yum update -y
 
+RUN yum -y install  wget
+
+# https://github.com/docker/for-mac/issues/6073#issuecomment-1061207986
+RUN wget --no-check-certificate https://copr.fedorainfracloud.org/coprs/jsynacek/systemd-backports-for-centos-7/repo/epel-7/jsynacek-systemd-backports-for-centos-7-epel-7.repo -O /etc/yum.repos.d/jsynacek-systemd-centos-7.repo
+
+RUN yum -y update systemd;
+
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
 systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 rm -f /lib/systemd/system/multi-user.target.wants/*;\
