@@ -15,8 +15,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     working_dir: /app
+    tty: true
 
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
@@ -27,7 +27,7 @@ services:
 
     # Overrides default command so things don't shut down after the process ends.
     privileged: true
-    cgroup: host
-    command: /usr/sbin/init
+    command: /sbin/init
+
 
 
